@@ -1,0 +1,46 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - crackshot
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - db-logs:/var/log/postgresql
+
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   networks:
+  #     - crackshot
+  #   ports:
+  #     - 127.0.0.1:48080:8080
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - .env_pgadmin
+    networks:
+      - crackshot
+    ports:
+      - 127.0.0.1:58080:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+networks:
+  crackshot:
+
+volumes:
+  db-data:
+    driver: local
+  db-logs:
+    driver: local
+  pgadmin-data:
+    driver: local
