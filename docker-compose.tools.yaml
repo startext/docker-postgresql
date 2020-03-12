@@ -1,0 +1,20 @@
+version: '3.5'
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - .env_pgadmin
+    depends_on:
+      - postgresql
+    networks:
+      - postgres
+    ports:
+      - 127.0.0.1:1080:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  pgadmin-data:
+    driver: local

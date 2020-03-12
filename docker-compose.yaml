@@ -1,46 +1,26 @@
-version: '3.1'
+version: '3.5'
 
 services:
-  db:
-    image: postgres
+  postgresql:
+    image: postgres:12
     restart: always
     env_file:
       - .env
     networks:
-      - crackshot
+      - postgres
     ports:
       - 5432:5432
     volumes:
       - db-data:/var/lib/postgresql/data
       - db-logs:/var/log/postgresql
-
-  # adminer:
-  #   image: adminer
-  #   restart: always
-  #   networks:
-  #     - crackshot
-  #   ports:
-  #     - 127.0.0.1:48080:8080
-
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    env_file:
-      - .env_pgadmin
-    networks:
-      - crackshot
-    ports:
-      - 127.0.0.1:58080:80
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
+      - ./config/initdb.d:/docker-entrypoint-initdb.d:ro
+      - ./config/data:/init.data:ro
 
 networks:
-  crackshot:
+  postgres:
 
 volumes:
   db-data:
     driver: local
   db-logs:
-    driver: local
-  pgadmin-data:
     driver: local
